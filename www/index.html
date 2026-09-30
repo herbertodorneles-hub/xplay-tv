@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><script>try{localStorage.setItem("xplay.tv","1")}catch(e){}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070d"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>XPLAY</title>
+<style>
+:root{--bg:#05070d;--card:#131a2b;--acc:#22e6ff;--acc2:#8a5cff;--tx:#f3f6ff;--mut:#8b96b4}
+*{box-sizing:border-box;margin:0}
+html{font-size:1.25vw}
+@media(max-width:900px){html{font-size:2.6vw}}
+body{background:radial-gradient(110% 80% at 15% -10%,#182a66 0,var(--bg) 62%);color:var(--tx);font:700 1rem/1.3 "Trebuchet MS","Segoe UI",Roboto,sans-serif;height:100vh;overflow:hidden;user-select:none;-webkit-user-select:none}
+[hidden]{display:none!important}
+#top{display:flex;align-items:center;gap:1.2rem;height:6.5rem;padding:0 3rem}
+.logo{font-size:2.6rem;font-weight:900;letter-spacing:.35rem;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+#menu{display:flex;gap:.6rem;margin-left:auto}
+.m{padding:.7rem 1.3rem;border-radius:2rem;background:#ffffff0f;font-size:1.25rem;border:.2rem solid transparent;cursor:pointer;white-space:nowrap}
+.m.on{background:#ffffff26}
+#pad{font-size:1.1rem;color:var(--mut);padding:.5rem 1rem;border-radius:2rem;background:#ffffff0d;white-space:nowrap}
+#pad.ok{color:#5dffa0}
+.f{outline:none;transition:transform .14s,box-shadow .14s,border-color .14s}
+.f:focus{border-color:var(--acc)!important;box-shadow:0 0 0 .25rem #22e6ff55,0 1.6rem 3rem #000c;transform:scale(1.08);z-index:2}
+#main{height:calc(100vh - 6.5rem - 3.4rem);overflow-y:auto;padding:0 3rem 2rem;scrollbar-width:none}
+#main::-webkit-scrollbar,.row::-webkit-scrollbar{display:none}
+.hero h1{font-size:5.5rem;font-weight:900;letter-spacing:.5rem;line-height:1}
+.hero p{font-size:1.5rem;color:var(--mut);letter-spacing:.3rem;margin:.4rem 0 1rem}
+.prof{font-size:1.3rem;color:#c9d2ee}
+h2{font-size:1.35rem;letter-spacing:.3rem;color:var(--mut);margin:1.4rem 0 0}
+.mut{color:var(--mut);font-size:1.2rem;padding:1rem 0}
+.row{display:flex;gap:1.4rem;overflow-x:auto;padding:1.2rem 1rem 1.6rem;margin:0 -1rem;scrollbar-width:none}
+.row.w{flex-wrap:wrap;overflow:visible}
+.card{flex:0 0 22rem;height:13rem;border-radius:1.5rem;padding:1.2rem 1.3rem;position:relative;background:var(--g,var(--card));border:.2rem solid #ffffff1c;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;overflow:hidden}
+.card .ic{position:absolute;top:.7rem;right:1rem;font-size:4.4rem}
+.card .star{position:absolute;top:.9rem;left:1.1rem;font-size:1.6rem}
+.card h3{font-size:1.6rem;font-weight:900}
+.card p{font-size:1.05rem;color:#ffffffb8}
+.card .pl{display:none;color:#fff;font-size:1.25rem;margin-top:.3rem;background:#00000055;align-self:flex-start;padding:.15rem .8rem;border-radius:1rem}
+.card:focus .pl{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}
+.chip{padding:.6rem 1.1rem;border-radius:.8rem;background:#ffffff12;font-size:1.2rem;border:.15rem solid #ffffff20}
+.chip.on{background:var(--acc);color:#001018;border-color:var(--acc)}
+#hint{position:fixed;left:0;right:0;bottom:0;height:3.4rem;display:flex;gap:2.5rem;align-items:center;justify-content:center;font-size:1.1rem;color:var(--mut);background:#000a}
+#toast{position:fixed;left:50%;bottom:5rem;transform:translate(-50%,2rem);background:#111a;border:.15rem solid var(--acc);padding:.8rem 1.8rem;border-radius:2rem;font-size:1.3rem;opacity:0;transition:.25s;z-index:30;backdrop-filter:blur(6px);background:#0b1224e6}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#game{position:fixed;inset:0;background:#000;z-index:10;display:flex;align-items:center;justify-content:center}
+#stage{width:100%;height:100%;display:flex}
+#stage canvas{width:100vw;height:100vh;object-fit:contain}
+#stage iframe{width:100%;height:100%;border:0;background:#fff}
+#bar{position:absolute;top:.8rem;left:1.5rem;color:#ffffff80;font-size:1rem;pointer-events:none;transition:opacity .6s}
+#phint{margin-top:1.2rem;font-size:1.1rem;color:var(--mut)}
+#pause{position:absolute;inset:0;background:#000b;display:flex;align-items:center;justify-content:center}
+.pbox{min-width:30rem}
+.pbox h2{color:#fff;font-size:2rem;margin:0 0 1rem;letter-spacing:.2rem}
+.btn{padding:1rem 1.8rem;border-radius:1.1rem;background:#ffffff16;font-size:1.6rem;margin-top:.8rem;border:.2rem solid transparent;cursor:pointer}
+body.pad,body.pad *{cursor:none!important}
+body.pad{touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;overscroll-behavior:none}
+body.pad.mv,body.pad.mv *{cursor:auto!important}body.pad.mv .f{cursor:pointer!important}
+#welcome{position:fixed;inset:0;z-index:40;background:radial-gradient(90% 80% at 50% 40%,#12307acc,#03050bf2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1rem;cursor:pointer}
+#welcome b{font-size:6rem}#welcome h1{font-size:3.4rem;letter-spacing:.3rem}#welcome p{font-size:1.6rem;color:var(--mut)}
+#dbg{position:fixed;left:1rem;top:7rem;z-index:99;background:#000c;color:#0f0;font:1rem monospace;padding:.5rem;white-space:pre;pointer-events:none}
+</style></head><body>
+<div id="top"><div class="logo">XPLAY</div>
+<div id="menu">
+<div class="m f" tabindex="0" data-go="home">🏠 Início</div><div class="m f" tabindex="0" data-go="games">🎮 Meus Jogos</div><div class="m f" tabindex="0" data-go="retro">👾 Retrô</div><div class="m f" tabindex="0" data-go="favs">⭐ Favoritos</div><div class="m f" tabindex="0" data-go="achv">🏆 Conquistas</div><div class="m f" tabindex="0" data-go="cfg">⚙️ Config</div></div>
+<div id="pad">🎮 Controle não conectado</div></div>
+<div id="main"></div>
+<div id="hint"><span>✕ Confirmar</span><span>○ Voltar</span><span>△ Favoritar</span><span>Share: Tela cheia</span></div>
+<div id="toast"></div><pre id="dbg" hidden></pre>
+<div id="welcome" hidden data-a="enter"><b>🎮</b><h1>CONTROLE DETECTADO</h1><p>Aperte ✕ para entrar no modo console em tela cheia</p><p>○ para continuar na janela</p></div>
+<input type="file" id="file" accept=".html,.htm" hidden>
+<div id="game" hidden><div id="stage"></div><div id="bar"><span id="gt"></span> · <span id="gh"></span></div>
+<div id="pause" hidden><div class="pbox"><h2 id="pt">PAUSADO</h2>
+<div class="btn f" tabindex="0" data-a="resume">▶ CONTINUAR</div><div class="btn f" tabindex="0" data-a="restart">↻ REINICIAR</div><div class="btn f" tabindex="0" data-a="fs">🖥 TELA CHEIA</div><div class="btn f" tabindex="0" data-a="exit">⏏ VOLTAR À BIBLIOTECA</div><div id="phint">✕ Escolher · ○ Continuar · □ Sair para a biblioteca</div></div></div></div>
+<script data-cfasync="false" src="xplay-input-guard.js"></script>
+<script data-cfasync="false">
+'use strict';
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===== Armazenamento (trocar por banco/API no futuro: só esta camada muda) ===== */
+const Store={k:'xplay.v1',load(){try{return JSON.parse(localStorage.getItem(this.k))||{}}catch(e){return{}}},
+save(d){try{localStorage.setItem(this.k,JSON.stringify(d))}catch(e){toast('Sem espaço para salvar')}}};
+const SEED=[
+{id:'racing',nome:'XPLAY RACING',descricao:'Corrida arcade',capa:'🏎️',cor:'#ff512f,#c2185b',categoria:'Corrida',plataforma:'XPLAY',tipo:'builtin',url:'racing'},
+{id:'corrida3d',nome:'CORRIDA SAUDÁVEL 3D',descricao:'Corrida 3D',capa:'🥦',cor:'#06d6a0,#0b132b',categoria:'Corrida',plataforma:'XPLAY',tipo:'web',url:'games/corrida-saudavel-3d/'},
+{id:'tropavg',nome:'TROPA DA VG 3D',descricao:'Operação 3D no HUB',capa:'📦',cor:'#ee4d2d,#2b1208',categoria:'Simulação',plataforma:'XPLAY',tipo:'web',url:'games/tropa-vg-operacao-3d/'},
+{id:'space',nome:'XPLAY SPACE',descricao:'Em breve',capa:'🚀',cor:'#1a2980,#159a9c',categoria:'Arcade',plataforma:'XPLAY',tipo:'soon',url:''},
+{id:'arcade',nome:'ARCADE PACK',descricao:'Em breve',capa:'🕹️',cor:'#5b247a,#1bcedf',categoria:'Arcade',plataforma:'Arcade',tipo:'soon',url:''}];
+let D=Store.load();D.games=D.games||[];
+SEED.forEach(s=>{if(!D.games.find(g=>g.id==s.id))D.games.push({ultimoAcesso:0,progresso:0,favorito:false,tempoJogado:0,...s})});
+D.ach=D.ach||{};D.stats=D.stats||{races:0,best:0};D.cfg=D.cfg||{};
+const save=()=>Store.save(D);
+/* Mapeamento de botões (padrão "standard" do DualShock 4). Remapear = gravar em D.cfg.map */
+const MAP=Object.assign({ok:0,back:1,fav:3,pause:9,fs:8,nitro:7},D.cfg.map);
+
+/* ===== Conquistas: jogos enviam eventos via XPLAY.emit(...) ou postMessage({xplay:'evento'}) ===== */
+const ACH=[['first_race','Primeira corrida','Comece uma corrida'],['first_win','Primeira vitória','Faça 300 pontos'],['ten','10 partidas','Jogue 10 corridas'],['champ','Campeão','Faça 1500 pontos']];
+function unlock(id){if(D.ach[id])return;D.ach[id]=Date.now();save();toast('🏆 '+ACH.find(a=>a[0]==id)[1])}
+const XPLAY={emit(e,d={}){
+if(e=='race_start'){D.stats.races++;unlock('first_race');if(D.stats.races>=10)unlock('ten')}
+if(e=='race_end'){D.stats.best=Math.max(D.stats.best,d.score||0);if(d.score>=300)unlock('first_win');if(d.score>=1500)unlock('champ')}
+save()},press:a=>press(a)}; /* press(): ponto de entrada para o futuro XPLAY CONTROLLER (celular) */
+addEventListener('message',e=>{const x=e.data&&e.data.xplay;if(typeof x!='string')return;
+const fr=$('#stage iframe');if(fr&&e.source===fr.contentWindow){
+if(x=='menu'){if(game&&game.tipo=='web'&&$('#pause').hidden)showPause();return}
+if(x=='exit'){if(game)closeGame();return}}
+if(x=='ready'||x=='menu'||x=='exit')return;XPLAY.emit(x,e.data)});
+
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ===== Telas ===== */
+let view='home',arg=null,game=null,t0=0,resetArm=0;
+const PLATS=['NES','SNES','Mega Drive','Master System','Game Boy','Game Boy Color','Game Boy Advance','Arcade'];
+const gc=g=>`<div class="card f" tabindex="0" data-a="play" data-id="${g.id}" style="--g:linear-gradient(135deg,${g.cor||'#2a3350,#131a2b'})"><span class="ic">${g.capa||'🎮'}</span>${g.favorito?'<span class="star">⭐</span>':''}<h3>${esc(g.nome)}</h3><p>${esc(g.categoria)} · ${esc(g.plataforma)}</p><div class="pl">▶ JOGAR</div></div>`;
+const bc=(t,ic,a,d='',id='')=>`<div class="card f" tabindex="0" data-a="${a}" data-id="${id}" style="--g:linear-gradient(135deg,#22304f,#121826)"><span class="ic">${ic}</span><h3>${t}</h3><p>${d}</p></div>`;
+const pc=(p,i)=>`<div class="card f" tabindex="0" data-a="plat" data-id="${p}" style="--g:linear-gradient(135deg,hsl(${i*45},55%,32%),#131a2b)"><span class="ic">👾</span><h3>${p}</h3><p>${D.games.filter(g=>g.plataforma==p).length} jogos</p></div>`;
+const row=(t,items,w,empty)=>`<h2>${t}</h2><div class="row${w?' w':''}">${items||`<div class="mut">${empty||'Nada por aqui ainda.'}</div>`}</div>`;
+const CH=[['↑',12],['↓',13],['←',14],['→',15],['✕',0],['○',1],['□',2],['△',3],['L1',4],['L2',6],['R1',5],['R2',7],['Share',8],['Options',9],['L3',10],['R3',11]];
+
+function render(keep){
+const G=D.games,fav=G.filter(g=>g.favorito),na=Object.keys(D.ach).length,tot=G.reduce((s,g)=>s+g.tempoJogado,0);
+const rec=G.filter(g=>g.ultimoAcesso).sort((a,b)=>b.ultimoAcesso-a.ultimoAcesso).slice(0,6);
+const noFav='Aperte △ em um jogo para favoritar.';let h='';
+if(view=='home')h=`<div class="hero"><h1>XPLAY</h1><p>SEU CONSOLE DIGITAL</p><div class="prof">👤 HERBERTO &nbsp; 🎮 ${G.length} jogos &nbsp; ⏱ ${(tot/3600).toFixed(1)} h &nbsp; 🏆 ${na}/${ACH.length} &nbsp; ⭐ ${fav.length}</div></div>`
++row('CONTINUAR JOGANDO',(rec.length?rec:G.slice(0,1)).map(gc).join(''))+row('MEUS JOGOS',G.map(gc).join(''))+row('RETRÔ',PLATS.map(pc).join(''))+row('FAVORITOS',fav.map(gc).join(''),0,noFav)+row('CONQUISTAS',bc(`${na} de ${ACH.length}`,'🏆','go','Ver todas','achv'));
+else if(view=='games')h=row('MEUS JOGOS',G.map(gc).join('')+bc('ADICIONAR JOGO','➕','addhtml','Importar arquivo .html')+bc('XPLAY STUDIO','🧠','studio','Crie jogos com IA · em breve'),1);
+else if(view=='retro')h=row('RETRÔ',PLATS.map(pc).join(''),1)+'<div class="mut">Emulador de SNES integrado (EmulatorJS + snes9x). Coloque suas ROMs em roms/snes/ e cadastre em SEED (tipo web, url emulator/player.html).</div>';
+else if(view=='plat'){const l=G.filter(g=>g.plataforma==arg);h=row(arg.toUpperCase(),l.map(gc).join('')+bc('ADICIONAR JOGO','➕','soon','Emulador · em breve'),1)}
+else if(view=='favs')h=row('FAVORITOS',fav.map(gc).join(''),1,noFav);
+else if(view=='achv')h=row('CONQUISTAS',ACH.map(a=>`<div class="card f" tabindex="0" style="--g:linear-gradient(135deg,${D.ach[a[0]]?'#b8860b,#3a2a05':'#222a3d,#131a2b'})"><span class="ic">${D.ach[a[0]]?'🏆':'🔒'}</span><h3>${a[1]}</h3><p>${a[2]}</p></div>`).join(''),1);
+else if(view=='cfg')h=row('CONFIGURAÇÕES',bc('TELA CHEIA','🖥️','fs','Ligar ou desligar')+bc('CONTROLE','🎮','padcfg','Testar botões')+bc('XPLAY CONTROLLER','📱','remote','Celular como controle · em breve')+bc('APAGAR DADOS','🗑️','reset','Zera jogos, favoritos e conquistas'),1);
+else if(view=='pad')h=`<h2>CONTROLE</h2><div class="mut" id="pn">Aperte qualquer botão para o controle aparecer.</div><div class="chips">${CH.map(c=>`<span class="chip" data-b="${c[1]}">${c[0]}</span>`).join('')}</div><div class="prof">Analógico esquerdo: <b id="lv">0.0 / 0.0</b> &nbsp; direito: <b id="rv">0.0 / 0.0</b></div><div class="mut">Remapeamento: preparado (D.cfg.map), tela em breve.</div><div class="row">${bc('VOLTAR','←','go','','cfg')}</div>`;
+const m=$('#main');m.innerHTML=h;
+document.querySelectorAll('.m').forEach(b=>b.classList.toggle('on',b.dataset.go==(view=='plat'?'retro':view=='pad'?'cfg':view)));
+const f=(keep&&m.querySelector(`[data-id="${keep}"]`))||m.querySelector('.f');if(f)focus(f);if(!keep)m.scrollTop=0}
+let lastId='';
+function focus(el){if(el.dataset&&el.dataset.id)lastId=el.dataset.id;el.focus({preventScroll:true});el.scrollIntoView({block:'center',inline:'center'})}
+/* Ao fechar um jogo o Chrome tira o foco do documento (o iframe focado some). Sem foco, o ✕ não achava nenhum card. */
+function restoreFocus(id){try{window.focus()}catch(e){}const sc=scope();if(!sc||sc===$('#pause'))return;const a=document.activeElement;
+if(a&&a.classList&&a.classList.contains('f')&&sc.contains(a))return;
+const f=$('#main').querySelector('[data-id="'+(id||lastId)+'"]')||$('#main').querySelector('.f');if(f)focus(f)}
+function go(v){view=v;arg=null;render()}
+
+/* ===== Ações ===== */
+function act(a,id){
+if(a=='play'){const g=D.games.find(x=>x.id==id);g.tipo=='soon'?toast('Em breve'):openGame(g)}
+else if(a=='plat'){view='plat';arg=id;render()}
+else if(a=='go')go(id);
+else if(a=='addhtml')$('#file').click();
+else if(a=='studio')toast('🧠 XPLAY STUDIO: em breve');
+else if(a=='soon')toast('Em breve');
+else if(a=='remote')toast('📱 XPLAY CONTROLLER: em breve');
+else if(a=='fs')toggleFS();
+else if(a=='enter'){$('#welcome').hidden=true;if(!document.fullscreenElement&&!document.webkitFullscreenElement)toggleFS()}
+else if(a=='padcfg'){view='pad';render()}
+else if(a=='reset'){if(!resetArm){toast('Aperte de novo para apagar tudo');resetArm=1;setTimeout(()=>resetArm=0,4000)}else{try{localStorage.clear()}catch(e){}location.reload()}}
+else if(a=='resume')resume();
+else if(a=='restart')restart();
+else if(a=='exit')closeGame()}
+/* ===== Input Guard (cursor fantasma da TV) — ver xplay-input-guard.js =====
+   Com Modo Controle ativo, click/pointerdown/mousedown/touchstart de mouse/toque NÃO comprovado são cancelados em window (captura)
+   e viram UM ✕ no item de foco lógico (document.activeElement .f) pelo mesmo pipeline do controle (dpress → press('ok')).
+   Mouse real de PC passa normalmente: precisa de movimento real do mouse depois da última entrada de controle. */
+const Guard=XPlayInputGuard.init({
+isControlMode:()=>document.body.classList.contains('pad'),
+scope:()=>scope(),
+confirm:()=>dpress('k','ok'),
+onBlocked:(e,t)=>{if(location.hash=='#debug')console.log('[guard] bloqueado',e.type,t,e.clientX|0,e.clientY|0)}});
+document.addEventListener('contextmenu',e=>{if(document.body.classList.contains('pad'))e.preventDefault()},true);
+/* A partir daqui só chegam cliques reais (mouse de PC) ou programáticos (el.click() do press) */
+document.addEventListener('click',e=>{
+const t=e.target.closest('[data-a],[data-go]');if(!t)return;t.dataset.go?go(t.dataset.go):act(t.dataset.a,t.dataset.id)});
+function favToggle(){if(game)return;const e=document.activeElement;if(e&&e.dataset&&e.dataset.a=='play'){const g=D.games.find(x=>x.id==e.dataset.id);g.favorito=!g.favorito;save();toast(g.favorito?'⭐ Adicionado aos favoritos':'Removido dos favoritos');render(g.id)}}
+function toggleFS(){const d=document,e=d.documentElement;try{if(d.fullscreenElement||d.webkitFullscreenElement)(d.exitFullscreen||d.webkitExitFullscreen).call(d);else{const r=(e.requestFullscreen||e.webkitRequestFullscreen).call(e);if(r&&r.catch)r.catch(()=>toast('Tela cheia bloqueada: aperte F11 ou instale o app'))}}catch(x){}}
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const id='h'+Date.now();
+try{localStorage.setItem('xplay.h.'+id,r.result)}catch(x){toast('Arquivo grande demais para o armazenamento local');return}
+D.games.push({id,nome:f.name.replace(/\.html?$/i,'').toUpperCase(),descricao:'Jogo importado',capa:'🕹️',cor:'#0f2027,#2c5364',categoria:'HTML5',plataforma:'XPLAY',tipo:'html',url:'local:'+id,ultimoAcesso:0,progresso:0,favorito:false,tempoJogado:0});
+save();toast('Jogo adicionado');render(id)};r.readAsText(f);e.target.value=''};
+
+/* ===== Jogo em execução ===== */
+function openGame(g){game=g;g.ultimoAcesso=Date.now();t0=Date.now();save();$('#game').hidden=false;$('#pause').hidden=true;$('#gt').textContent=g.nome;$('#gh').textContent=g.tipo=='web'?'PS ou Share+Options = menu · segure PS = sair':'Options = pausar';const bar=$('#bar');bar.style.opacity=1;clearTimeout(bar._t);bar._t=setTimeout(()=>bar.style.opacity=0,5000);
+const box=$('#stage');box.innerHTML='';const AL='gamepad; fullscreen; autoplay; vibrate; web-share';
+if(g.tipo=='builtin'){box.innerHTML='<canvas id="cv" width="1280" height="720"></canvas>';Race.start($('#cv'))}
+else{const f=document.createElement('iframe');f.setAttribute('allow',AL);
+if(g.tipo=='web')f.src=g.url;else{f.setAttribute('sandbox','allow-scripts allow-pointer-lock');f.srcdoc=localStorage.getItem('xplay.h.'+g.id)||'<h1>Arquivo do jogo não encontrado</h1>'}
+f.onload=()=>{try{f.contentWindow.focus()}catch(e){}};box.append(f);f.focus()}}
+const hold=v=>{const f=$('#stage iframe');if(f&&game&&game.tipo=='web'){try{f.contentWindow.postMessage({xplay:'hold',v},'*')}catch(e){}}};
+const own=()=>game&&game.tipo=='web'&&$('#pause').hidden; /* jogo com controle próprio: o XPLAY só reage ao PS ou Share+Options */
+function closeGame(){if(!game)return;const id=game.id;Race.stop();game.tempoJogado+=Math.round((Date.now()-t0)/1000);save();game=null;
+/* 1) volta ao menu NA HORA; 2) só depois derruba o iframe (soltar WebGL/áudio bloqueava a tela) */
+$('#pause').hidden=true;$('#game').hidden=true;render(id);
+const box=$('#stage'),fr=box.querySelector('iframe');
+if(fr){try{fr.contentWindow.postMessage({xplay:'stop'},'*')}catch(e){}
+try{fr.blur()}catch(e){}restoreFocus(id);
+box.id='';box.hidden=true;const n=document.createElement('div');n.id='stage';$('#game').prepend(n);
+setTimeout(()=>{try{fr.src='about:blank'}catch(e){}setTimeout(()=>{fr.remove();box.remove();restoreFocus(id);setTimeout(()=>restoreFocus(id),250)},60)},40)}
+else{box.innerHTML='';restoreFocus(id)}}
+function showPause(t){if(!game)return;$('#pt').textContent=t||'PAUSADO';$('#pause').hidden=false;Race.paused=true;hold(true);
+const f=$('#stage iframe');if(f)try{f.blur()}catch(e){}try{window.focus()}catch(e){}focus($('#pause .f'))}
+function resume(){$('#pause').hidden=true;Race.paused=false;hold(false);const f=$('#stage iframe');if(f){f.focus();try{f.contentWindow.focus()}catch(e){}}}
+function restart(){$('#pause').hidden=true;if(game.tipo=='builtin')Race.reset();else{const f=$('#stage iframe');game.tipo=='web'?f.contentWindow.location.reload():f.srcdoc=f.srcdoc}}
+function back(){if(game){if(!$('#pause').hidden){if(!(game.tipo=='builtin'&&Race.over))resume()}else showPause();return}
+if(view=='plat')go('retro');else if(view=='pad')go('cfg');else if(view!='home')go('home')}
+/* Botão Voltar do controle remoto (APK de TV): true = tratado aqui; false = sair do app */
+window.__tvBack=function(){if(!$('#welcome').hidden){$('#welcome').hidden=true;return true;}if(game){back();return true;}if(view!='home'){back();return true;}return false;};
+
+/* ===== Navegação espacial (teclado, controle, futuro celular) ===== */
+const scope=()=>{const p=$('#pause');return !$('#game').hidden?(p.hidden?null:p):document.body};
+function move(d){const sc=scope();if(!sc)return;const els=[...sc.querySelectorAll('.f')].filter(e=>e.getClientRects().length);if(!els.length)return;
+const a=document.activeElement;if(!els.includes(a)){focus(els[0]);return}
+const r=a.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let best,bs=1e9;
+for(const e of els){if(e==a)continue;const q=e.getBoundingClientRect(),x=q.left+q.width/2-cx,y=q.top+q.height/2-cy;let p,o;
+if(d=='left'){if(x>-4)continue;p=-x;o=Math.abs(y)}else if(d=='right'){if(x<4)continue;p=x;o=Math.abs(y)}
+else if(d=='up'){if(y>-4)continue;p=-y;o=Math.abs(x)}else{if(y<4)continue;p=y;o=Math.abs(x)}
+const s=p+o*2.5;if(s<bs){bs=s;best=e}}
+if(best)focus(best);else if(sc.id=='pause'&&(d=='up'||d=='down'))focus(d=='up'?els[els.length-1]:els[0])}
+function press(a){seen();document.body.classList.remove('mv');if(!$('#welcome').hidden){if(a=='ok')act('enter');else if(a=='back')$('#welcome').hidden=true;return}
+if(a=='back')return back();if(a=='ok'){const sc=scope();if(sc){const e=document.activeElement;if(e&&e.classList.contains('f')&&sc.contains(e))e.click();else restoreFocus()}return}move(a)}
+
+/* ===== Teclado ===== */
+const K={},P={x:0,y:0},held={nitro:false};
+const axis=()=>{let x=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),y=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);if(Math.abs(P.x)>Math.abs(x))x=P.x;if(Math.abs(P.y)>Math.abs(y))y=P.y;return{x,y}};
+addEventListener('keydown',e=>{K[e.code]=1;
+if(game&&/Arrow|Space/.test(e.code))e.preventDefault();
+if(e.code=='KeyP'&&game){$('#pause').hidden?showPause():back();return}
+if(e.code=='KeyF'&&!game){favToggle();return}
+if(e.code=='KeyM'){toggleFS();return}
+if((e.code=='KeyQ'||e.code=='KeyX')&&game&&!$('#pause').hidden){closeGame();return}
+const m={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',Enter:'ok',Escape:'back',Backspace:'back'}[e.code]||KC[e.keyCode];
+if(m||GK(e)){e.preventDefault();if(m)dpress('k',m)}});
+addEventListener('keyup',e=>K[e.code]=0);addEventListener('blur',()=>{for(const k in K)K[k]=0});
+
+/* ===== Gamepad API ===== */
+const prev={},rep={};let padTxt='',seenPad=0,mt;
+const TABS=['home','games','retro','favs','achv','cfg'];
+function tab(d){if(game||!$('#welcome').hidden)return;const c=view=='plat'?'retro':view=='pad'?'cfg':view;go(TABS[(TABS.indexOf(c)+d+6)%6])}
+function setHint(){$('#hint').innerHTML=document.body.classList.contains('pad')?'<span>✕ Confirmar</span><span>○ Voltar</span><span>△ Favoritar</span><span>L1 R1 Trocar aba</span><span>Share Tela cheia</span>':'<span>Conecte um controle para o modo console</span><span>Mouse, toque e teclado também funcionam</span>'}
+/* Modo console: ao detectar controle a interface troca para o layout de controle (cursor some, dicas de botões) e oferece tela cheia */
+function padChanged(gp){document.body.classList.toggle('pad',!!gp);Guard.refresh();setHint();
+const fsOn=document.fullscreenElement||matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+if(gp&&!seenPad&&!fsOn&&!game){seenPad=1;$('#welcome').hidden=false}}
+/* Cursor: some só com controle em uso; volta apenas com movimento REAL do mouse (rolagem da página gera mousemove falso na TV) */
+let lx=-1,ly=-1,lastIn=0,acc=0;const seen=()=>{lastIn=performance.now();acc=0;Guard.noteControllerInput()};
+addEventListener('mousemove',e=>{const f=lx<0,d=Math.abs(e.clientX-lx)+Math.abs(e.clientY-ly);lx=e.clientX;ly=e.clientY;
+if(f||performance.now()-lastIn<900)return;acc+=d;if(acc<14)return;acc=0;
+document.body.classList.add('mv');clearTimeout(mt);mt=setTimeout(()=>document.body.classList.remove('mv'),2500)});
+addEventListener('keydown',seen);
+/* Navegadores de TV (ex.: TCL) convertem botões do controle em teclas/cliques nativos: consumimos tudo e evitamos ação dupla */
+const KC={19:'up',20:'down',21:'left',22:'right',23:'ok',195:'ok',196:'back'},GK=e=>e.keyCode>=195&&e.keyCode<=204;
+['keyup','keypress'].forEach(t=>addEventListener(t,e=>{if(KC[e.keyCode]||GK(e))e.preventDefault()},true));
+let lastBtn=0;const lastAct={k:0,p:0};
+function padBusy(){const g=(navigator.getGamepads?[...navigator.getGamepads()]:[]).find(Boolean);return !!(g&&g.buttons.some(b=>b.pressed))||performance.now()-lastBtn<400}
+function dpress(src,a){const o=src=='p'?'k':'p',n=performance.now();if(n-lastAct[o]<170)return;lastAct[src]=n;press(a)}
+if(location.hash=='#debug'){const d=$('#dbg'),L=[];d.hidden=false;['keydown','click','pointerdown'].forEach(t=>addEventListener(t,e=>{L.unshift(t+' key='+(e.key||'')+' kc='+(e.keyCode||'')+' trusted='+e.isTrusted+' ptr='+(e.pointerType||'')+' xy='+(e.clientX|0)+','+(e.clientY|0)+' tg='+((e.target.dataset&&(e.target.dataset.id||e.target.dataset.a))||e.target.tagName)+' foco='+((document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.id)||'-')+' busy='+padBusy());L.length=Math.min(L.length,9);d.textContent=L.join('\n')},true))}
+function poll(){
+const gp=(navigator.getGamepads?[...navigator.getGamepads()]:[]).find(Boolean);
+const txt=gp?'🎮 '+(/054c|dualshock|wireless controller/i.test(gp.id)?'DualShock 4':'Controle')+' conectado':'🎮 Controle não conectado';
+if(txt!=padTxt){padTxt=txt;const p=$('#pad');p.textContent=txt;p.classList.toggle('ok',!!gp);const pn=$('#pn');if(pn&&gp)pn.textContent=gp.id;padChanged(gp)}
+P.x=P.y=0;held.nitro=!!(K.Space||K.ShiftLeft);
+if(gp){const b=i=>!!(gp.buttons[i]&&gp.buttons[i].pressed),ax=gp.axes[0]||0,ay=gp.axes[1]||0,now=performance.now();
+P.x=(b(15)?1:0)-(b(14)?1:0)||(Math.abs(ax)>.2?ax:0);P.y=(b(13)?1:0)-(b(12)?1:0)||(Math.abs(ay)>.2?ay:0);
+if(b(MAP.nitro)||b(5)||b(6))held.nitro=true;const btnDown=gp.buttons.some(x=>x.pressed);if(btnDown)lastBtn=performance.now();if(btnDown||Math.abs(ax)>.5||Math.abs(ay)>.5)Guard.noteControllerInput();
+const dirs={up:b(12)||ay<-.6,down:b(13)||ay>.6,left:b(14)||ax<-.6,right:b(15)||ax>.6};
+for(const d in dirs){if(dirs[d]){if(!rep[d]){rep[d]=now+380;own()||dpress('p',d)}else if(now>rep[d]){rep[d]=now+120;own()||dpress('p',d)}}else rep[d]=0}
+const edge=(i,fn)=>{const v=b(i);if(v&&!prev[i]&&!own())fn();prev[i]=v};edge(4,()=>tab(-1));edge(5,()=>tab(1));
+edge(MAP.ok,()=>dpress('p','ok'));edge(MAP.back,()=>dpress('p','back'));edge(MAP.fav,favToggle);edge(MAP.fs,toggleFS);edge(2,()=>{if(game&&!$('#pause').hidden)closeGame()});edge(MAP.pause,()=>{if(game)$('#pause').hidden?showPause():back()});
+if(view=='pad'&&!game){document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',b(+c.dataset.b)));
+const f=(a,b2)=>(gp.axes[a]||0).toFixed(1)+' / '+(gp.axes[b2]||0).toFixed(1);$('#lv').textContent=f(0,1);$('#rv').textContent=f(2,3)}}
+requestAnimationFrame(poll)}
+
+/* ===== XPLAY RACING (Canvas 2D, 1280x720) ===== */
+const Race={on:0,paused:false,over:false,
+start(c){this.stop();this.g=c.getContext('2d');this.reset();this.on=1;this.last=performance.now();
+const loop=t=>{if(!this.on)return;requestAnimationFrame(loop);const dt=Math.min((t-this.last)/1000,.05);this.last=t;if(!this.paused)this.step(dt);this.draw()};requestAnimationFrame(loop)},
+stop(){this.on=0},
+reset(){this.p={x:640,y:580};this.o=[];this.sp=320;this.sc=0;this.ln=0;this.sw=0;this.over=false;this.paused=false;XPLAY.emit('race_start')},
+step(dt){if(this.over)return;const a=axis(),n=held.nitro,p=this.p;
+p.x=Math.max(370,Math.min(910,p.x+a.x*430*dt));p.y=Math.max(300,Math.min(640,p.y+a.y*260*dt));
+const tgt=(320-a.y*80+this.sc/8)*(n?1.6:1);this.sp+=(tgt-this.sp)*Math.min(1,dt*3);
+this.ln=(this.ln+this.sp*dt)%80;this.sc+=this.sp*dt/10;
+if((this.sw-=dt)<=0){this.sw=Math.max(.3,260/this.sp);this.o.push({x:370+Math.random()*540,y:-100,c:'hsl('+(Math.random()*360|0)+',80%,55%)'})}
+for(const o of this.o){o.y+=(this.sp-140)*dt;if(Math.abs(o.x-p.x)<46&&Math.abs(o.y-p.y)<86){this.over=true;XPLAY.emit('race_end',{score:this.sc|0});showPause('FIM DE JOGO · '+(this.sc|0)+' pts');break}}
+this.o=this.o.filter(o=>o.y<820)},
+car(x,y,c){const g=this.g;g.fillStyle='#0008';g.fillRect(x-22,y-40,54,94);g.fillStyle=c;g.fillRect(x-25,y-45,50,90);g.fillStyle='#0d1424';g.fillRect(x-18,y-22,36,20);g.fillRect(x-18,y+20,36,12);g.fillStyle='#fff';g.fillRect(x-22,y-45,8,6);g.fillRect(x+14,y-45,8,6)},
+draw(){const g=this.g;g.fillStyle='#0b3d1e';g.fillRect(0,0,1280,720);g.fillStyle='#2a2f3a';g.fillRect(340,0,600,720);g.fillStyle='#ffd400';g.fillRect(332,0,8,720);g.fillRect(940,0,8,720);
+g.fillStyle='#ffffffcc';for(const x of[536,636,736])for(let y=-80+this.ln;y<720;y+=80)g.fillRect(x+(x==636?0:1),y,8,40);
+for(const o of this.o)this.car(o.x,o.y,o.c);this.car(this.p.x,this.p.y,'#22e6ff');
+g.fillStyle='#fff';g.font='bold 40px sans-serif';g.fillText((this.sc|0)+' PTS',40,64);g.font='bold 28px sans-serif';g.fillText(((this.sp*.4)|0)+' KM/H',40,104);
+g.fillStyle=held.nitro?'#ff8a00':'#ffffff70';g.fillText('NITRO: R2 / Espaço',40,144)}};
+
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();poll();
+</script></body></html>

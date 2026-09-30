@@ -1,0 +1,10 @@
+{
+  "appId": "com.xplay.console",
+  "appName": "XPLAY",
+  "webDir": "www",
+  "backgroundColor": "#05070D",
+  "android": {
+    "backgroundColor": "#05070D",
+    "allowMixedContent": false
+  }
+}

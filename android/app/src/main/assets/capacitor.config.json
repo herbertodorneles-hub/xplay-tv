@@ -1,0 +1,10 @@
+{
+	"appId": "com.corridasaudavel.app",
+	"appName": "Corrida Saudável 3D",
+	"webDir": "www",
+	"backgroundColor": "#0B132B",
+	"android": {
+		"backgroundColor": "#0B132B",
+		"allowMixedContent": false
+	}
+}

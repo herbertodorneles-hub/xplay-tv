@@ -1,0 +1,11 @@
+# Cloudflare Pages / Workers Static Assets: sempre revalidar o shell do app
+/index.html
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+/xplay-input-guard.js
+  Cache-Control: no-cache
+/xplay-shim.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
